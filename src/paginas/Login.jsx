@@ -5,7 +5,7 @@ import { Alerta } from "../components/Alerta";
 import useAuth from "../hooks/useAuth";
 import clienteAxios from "../config/axios";
 
-const Login = () => {
+export const Login = () => {
 
     //States
     const [email,setEmail]=useState('');
@@ -78,4 +78,3 @@ const handleSubmit= async (e)=>{
   )
 }
 
-export default Login
