@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import { Alerta } from "../components/Alerta";
 import clienteAxios from "../config/axios";
-const Registrar = () => {
+export const Registrar = () => {
 
 const [nombre, setNombre]= useState('');
 const [email,setEmail]=useState('');
@@ -107,4 +107,3 @@ const {mensaje}= alerta;
   )
 }
 
-export default Registrar

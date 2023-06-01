@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Alerta } from '../components/Alerta';
 import clienteAxios from '../config/axios'
 
-const ConfirmarCuenta = () => {
+export const ConfirmarCuenta = () => {
     const [cuentaConfirmada, setCuentaConfirmada] = useState(false)
     const [cargando, setCargando] = useState(true);
     const [alerta, setAlerta] = useState({});
@@ -62,4 +62,3 @@ const ConfirmarCuenta = () => {
     )
   };
   
-  export default ConfirmarCuenta;

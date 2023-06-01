@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import clienteAxios from "../config/axios"
 import { Alerta } from "../components/Alerta"
-const OlvidePassword = () => {
+export const OlvidePassword = () => {
 
 const [email,setEmail]=useState('');
 const [alerta,setAlerta]= useState({});
@@ -67,5 +67,3 @@ const handleSubmit= async (e)=>{
     </>
   )
 }
-
-export default OlvidePassword
