@@ -28,7 +28,14 @@ const handleSubmit= async (e)=>{
     try {
         const {data} = await clienteAxios.post('/veterinarios/login',{email,password});
         localStorage.setItem('token', data.token);
-        setAuth(data);
+        const config = {
+            headers: {
+                "Content-Type": "application/json", 
+                Authorization: `Bearer ${data.token}`
+            }
+        }
+        const { data: perfil } = await clienteAxios.get('/veterinarios/perfil', config);
+        setAuth(perfil);
         navigate('/admin');
     } catch (error) {
       setAlerta({mensaje: error.response.data.msg,error:true});
@@ -77,4 +84,3 @@ const handleSubmit= async (e)=>{
     </>
   )
 }
-

@@ -5,7 +5,8 @@ export const Paciente = ({paciente}) => {
 
   const {setEdicion,eliminarPaciente}= usePacientes();
   
-    const {email, fecha, nombre, propietario, sintomas,_id}= paciente;
+    const {email, fecha, nombre, propietario, sintomas,_id, id}= paciente;
+    const pacienteId = _id || id;
 
 
     const formatearFecha=(fecha)=>{
@@ -35,7 +36,7 @@ export const Paciente = ({paciente}) => {
         </button>
         <button type="button"
           className="px-10 py-2 font-bold text-white uppercase bg-red-600 rounded-lg hover:bg-red-700"
-          onClick={(()=>eliminarPaciente(_id))}>
+          onClick={(()=>eliminarPaciente(pacienteId))}>
           Eliminar
         </button>
       </div>

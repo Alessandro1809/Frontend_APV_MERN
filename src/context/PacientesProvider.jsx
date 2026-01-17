@@ -10,7 +10,13 @@ const [pacientes, setPacientes]= useState([]);
 const [paciente, setPaciente]= useState({});
 const {Auth}= useAuth();
 
-useEffect(()=>{
+    const normalizarPaciente = (paciente) => {
+        if (!paciente) return {};
+        return { 
+            ...paciente, 
+            _id: paciente._id || paciente.id,
+        };
+    }
 
     const obtenerPacientes= async ()=>{
 
@@ -26,7 +32,10 @@ useEffect(()=>{
             }
 
             const {data}= await clienteAxios('/pacientes',config);
-            setPacientes(data);
+            const pacientesNormalizados = Array.isArray(data)
+                ? data.map((paciente) => normalizarPaciente(paciente))
+                : [];
+            setPacientes(pacientesNormalizados);
       } catch (error) {
             console.log(error)
         }
@@ -34,6 +43,7 @@ useEffect(()=>{
 
     }
 
+useEffect(()=>{
 obtenerPacientes();
 },[Auth]);
 
@@ -50,8 +60,19 @@ obtenerPacientes();
             if (paciente.id) {
                try {
                 const {data}= await clienteAxios.put(`/pacientes/${paciente.id}`, paciente, config)
-                const pacienteActualizado= pacientes.map(pacienteState=> pacienteState._id===data._id ? data: pacienteState)
-                setPacientes(pacienteActualizado)
+                const pacienteRespuesta = data?.paciente ?? data;
+                const pacienteNormalizado = normalizarPaciente(pacienteRespuesta);
+                if (!pacienteNormalizado._id) {
+                    await obtenerPacientes();
+                    setPaciente({});
+                    return;
+                }
+                setPacientes((pacientesState)=>
+                    pacientesState.map((pacienteState)=>
+                        pacienteState._id===pacienteNormalizado._id ? pacienteNormalizado : pacienteState
+                    )
+                )
+                setPaciente({})
                } catch (error) {
                 console.log(error)
                }
@@ -60,9 +81,17 @@ obtenerPacientes();
                   
     
                     const {data}= await clienteAxios.post('/pacientes', paciente,config);
-    
-                   const {createAt,updateAt,__v,...pacienteAlmacenado}= data;
-                   setPacientes([pacienteAlmacenado,...pacientes]);
+
+                   const pacienteRespuesta = data?.paciente ?? data;
+                   const {createAt,updateAt,__v,...pacienteAlmacenado}= pacienteRespuesta || {};
+                   const pacienteNormalizado = normalizarPaciente(pacienteAlmacenado);
+                   if (!pacienteNormalizado._id) {
+                        await obtenerPacientes();
+                        setPaciente({});
+                        return;
+                   }
+                   setPacientes((pacientesState)=>[pacienteNormalizado,...pacientesState]);
+                   setPaciente({});
                 } catch (error) {
                     console.log(error.response.data.msg);
                 }
@@ -74,7 +103,7 @@ obtenerPacientes();
 
 
         const setEdicion=(paciente)=>{
-           setPaciente(paciente);
+           setPaciente(normalizarPaciente(paciente));
         }
 
         const eliminarPaciente=async (id)=>{
@@ -89,8 +118,12 @@ obtenerPacientes();
                         }
                     }
                     const {data}= await clienteAxios.delete(`/pacientes/${id}`,config);
-                    const pacienteActualizado= pacientes.filter(pacientesState=> pacientesState._id!==id);
-                    setPacientes(pacienteActualizado);
+                    setPacientes((pacientesState)=>
+                        pacientesState.filter((pacientesState)=>pacientesState._id!==id)
+                    );
+                    setPaciente((pacienteState)=>
+                        pacienteState?._id===id ? {} : pacienteState
+                    );
                 } catch (error) {
                     console.log(error)
                 }
@@ -115,4 +148,3 @@ obtenerPacientes();
 
 
 export default PacienteContext;
-

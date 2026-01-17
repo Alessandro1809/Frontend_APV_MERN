@@ -13,8 +13,8 @@ export const ListadoPacientes = () => {
                 <p className="mt-5 mb-10 text-xl font-bold text-center">Administra tus{''} <span className="font-bold text-indigo-600">Pacientes y Citas</span></p>
          
             
-            {pacientes.map(paciente=>(<Paciente
-                key={paciente._id}
+            {pacientes.map((paciente, index)=>(<Paciente
+                key={paciente._id || paciente.id || index}
                 paciente={paciente}
             
             />))}

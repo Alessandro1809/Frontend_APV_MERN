@@ -8,7 +8,7 @@ export const Formulario = () => {
     const [nombre,setNombre]= useState('');
     const [propietario,setPropietario]= useState('');
     const [email,setEmail]= useState('');
-    const [fecha,setFecha]= useState(Date.now());
+    const [fecha,setFecha]= useState('');
     const [sintomas,setSintomas]= useState('');
     const [id,setId]= useState(null);
 
@@ -18,19 +18,23 @@ export const Formulario = () => {
         
 
     useEffect(()=>{
-            
-       if (paciente?.nombre) {
-        setNombre(paciente.nombre); 
-        setPropietario(paciente.propietario);
-        setEmail(paciente.email);
-        setFecha(paciente.fecha);
-        setSintomas(paciente.sintomas);
-        setId(paciente._id);
-        
+       const pacienteId = paciente?._id || paciente?.id;
+       if (pacienteId) {
+        setNombre(paciente.nombre || '');
+        setPropietario(paciente.propietario || '');
+        setEmail(paciente.email || '');
+        setFecha(paciente.fecha ? paciente.fecha.split('T')[0] : '');
+        setSintomas(paciente.sintomas || '');
+        setId(pacienteId);
+        return;
        }
 
-
-        
+       setNombre(''); 
+       setPropietario('');
+       setEmail('');
+       setFecha('');
+       setSintomas('');
+       setId(null);
     },[paciente]);
 
 
@@ -58,7 +62,7 @@ const handleSubmit = e =>{
     setEmail('');
     setFecha('');
     setSintomas('');
-    setId('');
+    setId(null);
 }
     const {mensaje}= alerta;
   return (
